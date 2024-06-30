@@ -54,8 +54,10 @@ end
 -- Check for cards sent to the GY
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	for tc in eg:Iter() do
-		if tc:IsPreviousLocation(LOCATION_HAND|LOCATION_GRAVE) then
-            e:SetLabel(tc:GetType())
+		if tc:IsPreviousLocation(LOCATION_HAND|LOCATION_DECK) then 
+			if tc:IsMonster() then Duel.RegisterFlagEffect(tp,id+100,RESET_PHASE+PHASE_END,0,1) end
+			if tc:IsSpell() then Duel.RegisterFlagEffect(tp,id+200,RESET_PHASE+PHASE_END,0,1) end
+			if tc:IsTrap() then Duel.RegisterFlagEffect(tp,id+300,RESET_PHASE+PHASE_END,0,1) end
 			Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		end
 	end
@@ -64,9 +66,9 @@ end
 -- Effects Negation
 function s.deckdes(e,tp,eg,ep,ev,re,r,rp)
 	local trig_loc,chain_id=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_CHAIN_ID)
-	if not (ep==1-tp and trig_loc==LOCATION_MZONE|LOCATION_GRAVE and chain_id~=s[0] and re:IsMonsterEffect()) then return end
+	if not (ep==1-tp and (trig_loc==LOCATION_MZONE or trig_loc==LOCATION_GRAVE) and chain_id~=s[0] and re:IsMonsterEffect()) then return end
 	s[0]=chain_id
-	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 and Duel.SelectYesNo(1-tp,aux.Stringid(id,1)) then
+	if Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)>0 and Duel.SelectYesNo(1-tp,aux.Stringid(id,1)) then
 		Duel.DiscardDeck(1-tp,1,REASON_EFFECT)
 		Duel.BreakEffect()
 	else Duel.NegateEffect(ev) end
@@ -85,15 +87,14 @@ end
 -- Apply Effect
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-    local type=e:GetLabel()
-    if type=TYPE_MONSTER  and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE|LOCATION_HAND,LOCATION_GRAVE,1,nil,e,tp) then
+    if Duel.GetFlagEffect(tp,id+100)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE|LOCATION_HAND,LOCATION_GRAVE,1,nil,e,tp) then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE|LOCATION_HAND,LOCATION_GRAVE,1,1,nil,e,tp)
         if #g>0 then
             Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
         end
     end
-    if type=TYPE_SPELL and Duel.IsExistingMatchingCard(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) then
+    if Duel.GetFlagEffect(tp,id+200)>0 and Duel.IsExistingMatchingCard(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
         local g=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
         if #g>0 then
@@ -101,7 +102,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             Duel.SendtoGrave(g,REASON_EFFECT)
         end
     end
-    if type=TYPE_TRAP and Duel.IsExistingMatchingCard(s.lpfilter,tp,LOCATION_MZONE|LOCATION_GRAVE,LOCATION_MZONE|LOCATION_GRAVE,1,nil) then
+    if Duel.GetFlagEffect(tp,id+300)>0 and Duel.IsExistingMatchingCard(s.lpfilter,tp,LOCATION_MZONE|LOCATION_GRAVE,LOCATION_MZONE|LOCATION_GRAVE,1,nil) then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
         local g=Duel.SelectMatchingCard(tp,s.lpfilter,tp,LOCATION_MZONE|LOCATION_GRAVE,LOCATION_MZONE|LOCATION_GRAVE,1,1,nil)
         if #g>0 then
