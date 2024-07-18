@@ -31,6 +31,7 @@ end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 		and (re:IsActiveType(TYPE_MONSTER) or re:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(ev)
+		and re:GetHandler():IsLocation(LOCATION_ONFIELD)
 end
 function s.filter(c,tp)
     return c:IsSetCard(0x45) and c:IsMonster() and c:IsControler(tp)
@@ -39,7 +40,7 @@ function s.rescon(sg,e,tp,mg)
     return sg:IsExists(Card.IsControler,1,nil,1-tp) and sg:IsExists(s.filter,1,nil,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local rg=Duel.GetMatchingGroup(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,re:GetHandler())
+	local rg=Duel.GetMatchingGroup(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	if chk==0 then return aux.SelectUnselectGroup(rg,e,tp,2,2,s.rescon,0) end
     Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,rg,2,0,0)
