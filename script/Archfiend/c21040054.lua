@@ -84,8 +84,10 @@ function s.dicecon(e,tp,eg,ep,ev,re,r,rp)
 	else return false end
 end
 function s.diceop(e,tp,eg,ep,ev,re,r,rp)
-    if not Duel.SelectYesNo(tp,aux.Stringid(id,1)) then return end
-	local e1=Effect.CreateEffect(e:GetHandler())
+    local c=e:GetHandler()
+    if not c:IsAbleToRemoveAsCost() or not Duel.SelectYesNo(tp,aux.Stringid(id,2)) then return end
+	Duel.Remove(c,POS_FACEUP,REASON_COST)
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_TOSS_DICE_NEGATE)
 	e1:SetCondition(s.dicecon2)
