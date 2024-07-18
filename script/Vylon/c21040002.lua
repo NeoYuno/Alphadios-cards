@@ -67,6 +67,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Equip(tp,tc,c,true)
 	else
 		Duel.Equip(tp,tc,c,true)
+		aux.SetUnionState(tc)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_EQUIP_LIMIT)
