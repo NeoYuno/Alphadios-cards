@@ -53,16 +53,6 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
     if Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE|LOCATION_EXTRA,0,1,nil,tp) and Duel.GetFlagEffect(tp,id)==0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
         local c=e:GetHandler()
-        local e1=Effect.CreateEffect(c)
-        e1:SetDescription(aux.Stringid(id,1))
-        e1:SetType(EFFECT_TYPE_FIELD)
-        e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-        e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-        e1:SetTargetRange(1,0)
-        e1:SetTarget(s.splimit)
-        e1:SetReset(RESET_PHASE+PHASE_END)
-        Duel.RegisterEffect(e1,tp)
-        Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
         local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.filter),tp,LOCATION_GRAVE|LOCATION_EXTRA,0,1,1,nil,tp):GetFirst()
         if not tc then return end
         aux.ToHandOrElse(tc,tp,
@@ -82,7 +72,7 @@ function s.splimit(e,c)
 end
 
 function s.lvfilter(c,tp)
-	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevelBelow(4)
+	return c:IsFaceup() and c:IsLevelBelow(4)
 		and Duel.IsExistingMatchingCard(s.xyzfilter1,tp,LOCATION_EXTRA,0,1,nil,c)
 end
 function s.xyzfilter1(c,tp)
