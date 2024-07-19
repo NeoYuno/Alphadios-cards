@@ -43,8 +43,8 @@ end
 s.listed_series={SET_VYLON}
 
 -- Unaffected by Spell Effects
-function s.efilter(e,re)
-	return re:IsActiveType(TYPE_SPELL)
+function s.efilter(e,te)
+	return te:IsActiveType(TYPE_SPELL) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
 
 -- Increase LP by 500
