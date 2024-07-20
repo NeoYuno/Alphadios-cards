@@ -116,5 +116,4 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.efilter(e,te,c)
 	return te:IsActiveType(TYPE_MONSTER) and te:GetOwner()~=c
-		and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end

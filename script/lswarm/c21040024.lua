@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCode(EVENT_BE_MATERIAL)
+	e2:SetCountLimit(1,{id,1})
 	e2:SetCondition(s.tkcon)
 	e2:SetTarget(s.tktg)
 	e2:SetOperation(s.tkop)
@@ -74,10 +75,10 @@ end
 function s.tkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
-		or not Duel.IsPlayerCanSpecialSummonMonster(tp,id+1,0x100a,TYPES_TOKEN,0,0,1,RACE_FIEND,ATTRIBUTE_DARK,POS_FACEUP) then return end
-	local token=Duel.CreateToken(tp,id+1)
-	Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsPlayerCanSpecialSummonMonster(tp,id+1,0x100a,TYPES_TOKEN,0,0,1,RACE_FIEND,ATTRIBUTE_DARK,POS_FACEUP) then
+		local token=Duel.CreateToken(tp,id+1)
+		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+	end
     local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
     Duel.Draw(p,d,REASON_EFFECT)
 end
