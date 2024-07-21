@@ -89,7 +89,7 @@ function s.arcanareg(c,coin)
 	c:RegisterEffect(e2)
     local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e3:SetCode(EFFECT_TOSS_COIN_CHOOSE)
+	e3:SetCode(EVENT_TOSS_COIN_NEGATE)
     e3:SetRange(LOCATION_MZONE)
 	e3:SetReset(RESET_EVENT|RESETS_STANDARD)
 	e3:SetCondition(s.coincon)
@@ -123,7 +123,10 @@ function s.indcon(e,tp,eg,ep,ev,re,r,rp)
 	return Arcana.GetCoinResult(e:GetHandler())==COIN_HEADS
 end
 function s.coincon(e,tp,eg,ep,ev,re,r,rp)
-	return ep==tp and Arcana.GetCoinResult(e:GetHandler())==COIN_HEADS
+	local ex,eg,et,cp,ct=Duel.GetOperationInfo(ev,CATEGORY_COIN)
+	if ex and ct==1 and ep==tp and Arcana.GetCoinResult(e:GetHandler())==COIN_HEADS then
+		return true
+	else return false end
 end
 function s.bpcon(e,tp,eg,ep,ev,re,r,rp)
 	return Arcana.GetCoinResult(e:GetHandler())==COIN_TAILS
