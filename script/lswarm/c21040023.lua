@@ -105,14 +105,18 @@ function s.lpop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Recover(tp,tc:GetAttack(),REASON_EFFECT)
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
-    local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_IMMUNE_EFFECT)
-	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0xa))
-	e1:SetValue(s.efilter)
-	e1:SetReset(RESET_PHASE+PHASE_END,2)
-	Duel.RegisterEffect(e1,tp)
+	local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsSetCard,0xa),tp,LOCATION_MZONE,0,nil)
+	for tc in aux.Next(g) do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetDescription(aux.Stringid(id,))
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_IMMUNE_EFFECT)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetValue(s.efilter)
+		e1:SetReset(RESET_PHASE+PHASE_END,2)
+		tc:RegisterEffect(e1)
+	end
 end
 function s.efilter(e,te,c)
 	return te:IsActiveType(TYPE_MONSTER) and te:GetOwner()~=c

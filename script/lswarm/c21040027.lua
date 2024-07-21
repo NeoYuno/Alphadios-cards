@@ -67,7 +67,7 @@ end
 
 -- Banish self from GY to replace destruction
 function s.repfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsReason(REASON_BATTLE|REASON_EFFECT) and c:IsSetCard(0xa) or c:IsSetCard(0x65)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsReason(REASON_BATTLE|REASON_EFFECT) and c:IsSetCard(0xa)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(s.repfilter,1,nil,tp) end
