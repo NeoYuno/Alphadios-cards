@@ -39,6 +39,7 @@ function s.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e5:SetCode(EVENT_SUMMON_SUCCESS)
+	e5:SetCountLimit(1,{id,2})
 	e5:SetTarget(s.lvtg2)
 	e5:SetOperation(s.lvop2)
 	c:RegisterEffect(e5)
@@ -53,6 +54,7 @@ function s.initial_effect(c)
 	e8:SetType(EFFECT_TYPE_IGNITION)
 	e8:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e8:SetRange(LOCATION_GRAVE)
+	e8:SetCountLimit(1,{id,3})
 	e8:SetCost(aux.bfgcost)
 	e8:SetTarget(s.mattg)
 	e8:SetOperation(s.matop)
@@ -92,16 +94,16 @@ function s.thfilter(c,e,tp)
         or (c:IsFaceup() and c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x10db) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE|LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE|LOCATION_EXTRA)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE|LOCATION_EXTRA)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE|LOCATION_REMOVED)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE|LOCATION_REMOVED)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
-		local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE|LOCATION_EXTRA,0,1,1,nil,e,tp):GetFirst()
+		local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE|LOCATION_REMOVED,0,1,1,nil,e,tp):GetFirst()
         if tc:IsSetCard(0x10db) and Duel.IsPlayerCanSpecialSummon(tp) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
             Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
         else
