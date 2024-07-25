@@ -34,9 +34,9 @@ function s.initial_effect(c)
 	e3:SetOperation(s.setop)
 	c:RegisterEffect(e3)
 end
-local IsDigitalBug={68950538,19301729,21040075,94344242,83048208,32465539,85004150,58600555,12615446,21040079}
+local DigitalBug={68950538,19301729,21040075,94344242,83048208,32465539,85004150,58600555,12615446,21040079}
 function s.spfilter(c,e,tp)
-	return IsDigitalBug and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK)
+	return c:IsCode(DigitalBug) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
