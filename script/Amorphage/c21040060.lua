@@ -45,7 +45,7 @@ function s.initial_effect(c)
 	e4:SetRange(LOCATION_GRAVE)
 	e4:SetHintTiming(0,TIMING_END_PHASE)
 	e4:SetCountLimit(1,{id,1})
-	e4:SetCost(aux.bfgcost)
+	e4:SetCost(s.thcost)
 	e4:SetTarget(s.thtg)
 	e4:SetOperation(s.thop)
 	c:RegisterEffect(e4)
@@ -116,6 +116,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsAbleToHandAsCost() end
+	Duel.SendtoHand(c,nil,REASON_COST)
+end
 function s.thfilter(c)
 	return c:IsCode(98287529) and c:IsAbleToHand()
 end
