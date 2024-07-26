@@ -58,7 +58,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local sg=g:Select(tp,1,1,nil)
 			Duel.HintSelection(sg)
-			Duel.BreakEffect()
 			Duel.Destroy(sg,REASON_EFFECT)
 		end
     else
