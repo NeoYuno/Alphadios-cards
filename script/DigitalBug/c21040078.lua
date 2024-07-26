@@ -51,14 +51,22 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
+	local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
     if e:GetLabel()==1 then
         Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
+		if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+			local sg=g:Select(tp,1,1,nil)
+			Duel.HintSelection(sg)
+			Duel.BreakEffect()
+			Duel.Destroy(sg,REASON_EFFECT)
+		end
     else
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		local oc=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil,e):GetFirst()
 		if oc then
 			Duel.HintSelection(oc,true)
-			Duel.Overlay(oc,tc)
+			Duel.Overlay(oc,tc,true)
 		end
     end
 end
