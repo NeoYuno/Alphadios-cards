@@ -35,8 +35,8 @@ function s.initial_effect(c)
 	e3:SetTarget(s.rthtg)
 	e3:SetOperation(s.rthop)
 	c:RegisterEffect(e3)
-    Duel.AddCustomActivityCounter(id,ACTIVITY_SUMMON,function(c) return c:IsRace(RACE_SPELLCASTER) and not c:IsLocation(LOCATION_HAND|LOCATION_DECK) end)
-    Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,function(c) return c:IsRace(RACE_SPELLCASTER) and not c:IsLocation(LOCATION_HAND|LOCATION_DECK) end)
+    Duel.AddCustomActivityCounter(id,ACTIVITY_SUMMON,function(c) return c:IsRace(RACE_SPELLCASTER) and c:IsPreviousLocation(LOCATION_HAND|LOCATION_DECK) end)
+    Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,function(c) return c:IsRace(RACE_SPELLCASTER) and c:IsPreviousLocation(LOCATION_HAND|LOCATION_DECK) end)
 end
 s.listed_series={SET_MAGISTUS,0x128,0x12a}
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -62,8 +62,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.thfilter(c,tp,code)
-	return (c:IsSetCard(SET_MAGISTUS) or c:IsSetCard(0x128) or c:IsSetCard(0x12a)) and c:IsMonster() and c:IsAbleToHand()
-        and not c:IsCode(code)
+	return (c:IsSetCard(SET_MAGISTUS) or c:IsSetCard(0x128) or c:IsSetCard(0x12a)) and c:IsMonster() and c:IsAbleToHand() and not c:IsCode(code)
 end
 function s.spfilter(c,e,tp)
 	return c:IsRace(RACE_SPELLCASTER) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
