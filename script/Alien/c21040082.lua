@@ -10,7 +10,7 @@ function s.initial_effect(c)
     --add counter
     local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_COUNTER)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetType(EFFECT_TYPE_FIELD|EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCountLimit(1)
@@ -64,7 +64,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RemoveCounter(tp,1,1,COUNTER_A,2,REASON_COST)
 end
 function s.spfilter(c,e,tp,pos)
-	return c:IsSetCard(0xc) or c:IsCode(51192573) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,pos)
+	return (c:IsSetCard(0xc) and c:IsMonster()) or c:IsCode(51192573) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,pos)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
