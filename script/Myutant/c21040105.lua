@@ -28,7 +28,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x159}
 function s.drfilter(c)
-	return c:IsSetCard(0x159) and not c:IsPublic() and c:IsAbleToRemove()
+	return c:IsSetCard(0x159) and c:IsAbleToRemove()
 end
 function s.myutantfilter(c)
     return c:IsFaceup() and c:IsLevelAbove(8) and c:IsSetCard(0x159)
