@@ -56,7 +56,7 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsSummonType(SUMMON_TYPE_TRIBUTE)
 end
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
-	return r~=REASON_RULE and rp==1-tp and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
+	return r~=REASON_RULE and rp==1-tp --and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(1-tp,0,LOCATION_HAND):RandomSelect(tp,#eg)
