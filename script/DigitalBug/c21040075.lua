@@ -43,7 +43,7 @@ function s.xyzlimit(e,c)
 	return not c:IsRace(RACE_INSECT)
 end
 function s.posfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_INSECT) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanChangePosition()
+	return c:IsFaceup() and c:IsRace(RACE_INSECT) and c:IsCanChangePosition()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
