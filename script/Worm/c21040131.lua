@@ -1,4 +1,4 @@
---Worm Cellulose
+--Cellulose Worm
 local s,id=GetID()
 function s.initial_effect(c)
 	c:SetSPSummonOnce(id)
