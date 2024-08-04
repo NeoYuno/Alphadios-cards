@@ -67,17 +67,20 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 		e1:SetValue(1)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 	end
     local ct=Duel.GetMatchingGroup(Card.IsRace,tp,LOCATION_GRAVE,0,nil,RACE_REPTILE):GetClassCount(Card.GetCode)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	if ct>0 then
+	if ct>0 and #g>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-		local sg=g:Select(tp,1,ct,nil)
+		local sg=g:Select(tp,1,#g,nil)
 		local ac=sg:GetFirst()
+		if not ac then return end
 		for ac in aux.Next(sg) do
-			ac:AddCounter(0x1009,1)
+			Duel.HintSelection(ac)
+			local val=Duel.AnnounceLevel(tp,1,ct)
+			ac:AddCounter(0x1009,val)
 		end
 	end
 end
