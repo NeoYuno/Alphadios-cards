@@ -32,12 +32,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ct=Duel.GetFieldGroupCount(tp,LOCATION_MZONE,LOCATION_MZONE)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	if ct>0 then
+	if ct>0 and #g>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-		local sg=g:Select(tp,1,ct,nil)
+		local sg=g:Select(tp,1,#g,nil)
 		local ac=sg:GetFirst()
+		if not ac then return end
 		for ac in aux.Next(sg) do
-			ac:AddCounter(COUNTER_A,1)
+			Duel.HintSelection(ac)
+			local val=Duel.AnnounceLevel(tp,1,ct)
+			ac:AddCounter(COUNTER_A,val)
 		end
 	end
 end
