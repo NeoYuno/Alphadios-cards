@@ -65,7 +65,7 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
         if Duel.ChangePosition(tc,POS_FACEUP_ATTACK) and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
             local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
-            if #sc==0 then return end
+            if not sc then return end
             Duel.BreakEffect()
             Duel.SendtoHand(sc,nil,REASON_EFFECT)
             Duel.ConfirmCards(1-tp,sc)
@@ -76,7 +76,7 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
         if Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE) and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
             local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
-            if #sc==0 then return end
+            if not sc then return end
             Duel.BreakEffect()
             Duel.SendtoHand(sc,nil,REASON_EFFECT)
                 Duel.ConfirmCards(1-tp,sc)
