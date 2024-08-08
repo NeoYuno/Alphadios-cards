@@ -27,6 +27,7 @@ function s.initial_effect(c)
     e3:SetRange(LOCATION_MZONE)
     e3:SetCountLimit(1)
     e3:SetCondition(function(e) return Duel.GetFlagEffect(0,id)>0 end)
+	e3:SetCost(aux.dxmcostgen(1,1,nil))
     e3:SetOperation(s.operation)
     c:RegisterEffect(e3)
 	aux.GlobalCheck(s,function()
@@ -62,7 +63,7 @@ function s.deckes(e,tp,eg,ep,ev,re,r,rp)
 	local trig_loc,chain_id=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_CHAIN_ID)
 	if not (ep==1-tp and trig_loc==LOCATION_MZONE|LOCATION_GRAVE and chain_id~=s[0] and re:IsMonsterEffect()) then return end
 	s[0]=chain_id
-	if Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>0 and Duel.SelectYesNo(1-tp,aux.Stringid(id,0)) then
+	if Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>0 and Duel.SelectYesNo(1-tp,aux.Stringid(id,1)) then
 		Duel.DiscardDeck(1-tp,1,REASON_EFFECT)
 		Duel.BreakEffect()
 	else Duel.NegateEffect(ev) end
@@ -75,20 +76,20 @@ function s.lpfilter(c)
     return c:IsFaceup() and c:GetAttack()>0
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-    if types&TYPE_MONSTER>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp) then
+    if types&TYPE_MONSTER>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         local spc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp):GetFirst()
         if not spc then return end
         Duel.SpecialSummon(spc,0,tp,tp,false,false,POS_FACEUP)
     end
-    if types&TYPE_SPELL>0 and Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)>0 then
+    if types&TYPE_SPELL>0 and Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
         local tgc=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil):GetFirst()
         if not tgc then return end
         Duel.HintSelection(tgc)
         Duel.SendtoGrave(tgc,REASON_EFFECT)
     end
-    if types&TYPE_TRAP>0 and Duel.IsExistingMatchingCard(s.lpfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil) then
+    if types&TYPE_TRAP>0 and Duel.IsExistingMatchingCard(s.lpfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
         local lpc=Duel.SelectMatchingCard(tp,s.lpfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil):GetFirst()
         if not lpc then return end

@@ -26,7 +26,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x8e}
 function s.ovfilter(c,tp,xyzc)
-	return c:IsFaceup() and c:IsSetCard(0x8e,xyzc,SUMMON_TYPE_XYZ,tp) and not c:IsSummonCode(xyzc,SUMMON_TYPE_XYZ,tp,id)
+	return c:IsFaceup() and c:IsSetCard(0x8e,xyzc,SUMMON_TYPE_XYZ,tp) and c:IsType(TYPE_XYZ,xyzc,SUMMON_TYPE_XYZ,tp) and not c:IsSummonCode(xyzc,SUMMON_TYPE_XYZ,tp,id)
 end
 function s.actlmtval(e,re,rp)
 	local rc=re:GetHandler()
