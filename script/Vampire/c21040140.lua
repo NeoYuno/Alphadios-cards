@@ -56,11 +56,12 @@ function s.tkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.vamfilter(c,tp)
+	local lvrk=c:GetLevel() or c:GetRank()
     if not Duel.CheckLPCost(tp,c:GetAttack()/2) then return false end
-    return c:IsFaceup() and c:IsSetCard(0x8e) and c:HasLevel() or c:HasRank() and Duel.IsExistingMatchingCard(s.tkfilter,tp,0,LOCATION_MZONE,1,nil,(c:GetLevel() or c:GetRank()))
+    return c:IsFaceup() and c:IsSetCard(0x8e) and Duel.IsExistingMatchingCard(s.tkfilter,tp,0,LOCATION_MZONE,1,nil,lvrk)
 end
-function s.tkfilter(c,tp,lvrank)
-    return c:IsFaceup() and c:IsLevelBelow(lvrank) and c:IsControlerCanBeChanged()
+function s.tkfilter(c,lvrk)
+    return c:IsFaceup() and c:GetLevel()>=lvrk and c:IsControlerCanBeChanged()
 end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -74,10 +75,10 @@ end
 function s.tkop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     local tc=Duel.GetFirstTarget()
-    local lvrank=tc:GetLevel() or tc:GetRank()
+    local lvrk=tc:GetLevel() or tc:GetRank()
     if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-    local sc=Duel.SelectMatchingCard(tp,s.tkfilter,tp,0,LOCATION_MZONE,1,1,nil,tp,lvrank):GetFirst()
+    local sc=Duel.SelectMatchingCard(tp,s.tkfilter,tp,0,LOCATION_MZONE,1,1,nil,lvrk):GetFirst()
     if sc then
         Duel.HintSelection(sc)
         Duel.GetControl(sc,tp)
@@ -121,19 +122,16 @@ function s.atkcon(e)
 	return not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0x8e),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 
-function s.cfilter(c,tp)
-	return c:IsMonster() and c:GetControler()~=c:GetOwner()
-end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.cfilter,1,false,nil,nil) end
-	local g=Duel.SelectReleaseGroupCost(tp,s.cfilter,1,1,false,nil,nil)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsMonster,1,false,nil,nil) end
+	local g=Duel.SelectReleaseGroupCost(tp,Card.IsMonster,1,1,false,nil,nil)
 	Duel.Release(g,REASON_COST)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x8e) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and s.thfilter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and s.thfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
