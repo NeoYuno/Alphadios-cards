@@ -37,7 +37,7 @@ function s.matfilter(c,val,sc,sumtype,tp)
 	return c:IsSetCard(0x35,sc,sumtype,tp) and c:IsType(TYPE_SYNCHRO,sc,sumtype,tp)
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x35) and c:IsMonster() and c:IsAbleToHand()
+	return c:IsSetCard(0x35) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE|LOCATION_REMOVED) and chkc:IsControler(tp) and s.thfilter(chkc) end
