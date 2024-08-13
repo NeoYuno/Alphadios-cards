@@ -53,7 +53,7 @@ function s.initial_effect(c)
 	e8:SetOperation(s.thop)
 	c:RegisterEffect(e8)
 end
-
+s.listed_card_types={TYPE_GEMINI}
 function s.normalcon(e)
 	local c=e:GetHandler():GetEquipTarget()
 	return c:IsType(TYPE_NORMAL)

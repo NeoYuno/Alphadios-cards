@@ -4,33 +4,30 @@ function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	Fusion.AddProcMixN(c,true,true,s.matfilter,2)
-    --Special Summon 1 Gemini monster
+	--register effect
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e0:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e0:SetCondition(s.regcon)
+	e0:SetOperation(s.regop)
+	c:RegisterEffect(e0)
+	--material count check
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1)
-	e1:SetTarget(s.sptg)
-	e1:SetOperation(s.spop)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_MATERIAL_CHECK)
+	e1:SetValue(s.valcheck)
+	e1:SetLabelObject(e0)
 	c:RegisterEffect(e1)
-    --Cannot be destroyed by battle
+    --Special Summon 1 Gemini monster
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-    e2:SetCondition(s.normalcon)
-	e2:SetValue(1)
+	e2:SetCountLimit(1)
+	e2:SetTarget(s.sptg)
+	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
-    --Cannot be destroyed by effects
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-    e3:SetCondition(s.effectcon)
-	e3:SetValue(1)
-	c:RegisterEffect(e3)
 end
 function s.matfilter(c,fc,sumtype,tp)
 	return c:IsLevelAbove(4) and c:IsType(TYPE_GEMINI,fc,sumtype,tp)
@@ -54,13 +51,43 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummonComplete()
 end
 
-function s.normalcon(e)
-    local c=e:GetHandler()
-    local g=c:GetMaterial()
-    return g:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
+function s.valcheck(e,c)
+	local g=c:GetMaterial()
+	local flag=0
+	if g:IsExists(Card.IsType,1,nil,TYPE_NORMAL) then flag=flag+1 end
+	if g:IsExists(Card.IsType,1,nil,TYPE_EFFECT) then flag=flag+2 end
+	e:GetLabelObject():SetLabel(flag)
 end
-function s.effectcon(e)
-    local c=e:GetHandler()
-    local g=c:GetMaterial()
-    return g:IsExists(Card.IsType,1,nil,TYPE_EFFECT)
+function s.regcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsSummonType(SUMMON_TYPE_FUSION) and e:GetLabel()>0
+end
+function s.chkfilter(c,label)
+	return c:GetFlagEffect(label)>0
+end
+function s.regop(e,tp,eg,ep,ev,re,r,rp)
+	local flag=e:GetLabel()
+	local c=e:GetHandler()
+	if (flag&1)>0 then
+	    --Cannot be destroyed by battle
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+		e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+		e2:SetRange(LOCATION_MZONE)
+		e2:SetValue(1)
+		e2:SetReset(RESET_EVENT+(RESETS_STANDARD&~RESET_TURN_SET))
+		c:RegisterEffect(e2)
+	end
+	if (flag&2)>0 then
+        --Cannot be destroyed by effects
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+		e3:SetRange(LOCATION_MZONE)
+		e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+		e3:SetValue(1)
+		e3:SetReset(RESET_EVENT+(RESETS_STANDARD&~RESET_TURN_SET))
+		c:RegisterEffect(e3)
+	end
 end
