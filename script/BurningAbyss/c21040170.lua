@@ -182,25 +182,25 @@ function s.applyop(e,tp,eg,ep,ev,re,r,rp)
     end
     if tc:IsCode(21040167) then
         Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(21040167,0))
-        local tc=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
-        if not tc then return end
+        local tc2=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
+        if not tc2 then return end
         local op=nil
-        if tc:IsRitualMonster() then
-            Duel.SendtoHand(tc,nil,REASON_EFFECT)
+        if tc2:IsRitualMonster() then
+            Duel.SendtoHand(tc2,nil,REASON_EFFECT)
         else
             op=Duel.SelectOption(tp,aux.Stringid(21040167,1),aux.Stringid(21040167,2))
         end
         if op==0 then
-            if (tc:IsMonster() and Duel.GetLocationCount(tp,LOCATION_MZONE)>0) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE) then
-                Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
-                Duel.ConfirmCards(1-tp,tc)
-            elseif (tc:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0)
-                and tc:IsSSetable() then
+            if (tc2:IsMonster() and Duel.GetLocationCount(tp,LOCATION_MZONE)>0) and tc2:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE) then
+                Duel.SpecialSummon(tc2,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
+                Duel.ConfirmCards(1-tp,tc2)
+            elseif (tc2:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0)
+                and tc2:IsSSetable() then
                 Duel.BreakEffect()
-                Duel.SSet(tp,tc)
+                Duel.SSet(tp,tc2)
             end
         else
-            Duel.SendtoHand(tc,nil,REASON_EFFECT)
+            Duel.SendtoHand(tc2,nil,REASON_EFFECT)
         end
         Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
     end
@@ -243,20 +243,20 @@ function s.applyop(e,tp,eg,ep,ev,re,r,rp)
         if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         local g=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-        local tc=g:GetFirst()
-        if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+        local tc2=g:GetFirst()
+        if tc2 and Duel.SpecialSummonStep(tc2,0,tp,tp,false,false,POS_FACEUP) then
             local e1=Effect.CreateEffect(e:GetHandler())
             e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
             e1:SetType(EFFECT_TYPE_SINGLE)
             e1:SetCode(EFFECT_DISABLE)
             e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-            tc:RegisterEffect(e1,true)
+            tc2:RegisterEffect(e1,true)
             local e2=Effect.CreateEffect(e:GetHandler())
             e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
             e2:SetType(EFFECT_TYPE_SINGLE)
             e2:SetCode(EFFECT_DISABLE_EFFECT)
             e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-            tc:RegisterEffect(e2,true)
+            tc2:RegisterEffect(e2,true)
         end
         Duel.SpecialSummonComplete()
         Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
