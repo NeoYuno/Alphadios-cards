@@ -39,7 +39,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0xea}
 function s.filter(c)
-	return c:IsSetCard(0xea) and c:IsMonster() and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0xea) and not c:IsCode(id) and c:IsAbleToGraveAsCost()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -63,7 +63,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e2,tp)
 end
 function s.limfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsPreviousLocation(LOCATION_EXTRA) and c:IsType(TYPE_SYNCHRO)
+	return c:IsFaceup() and c:IsSetCard(0xea) and c:IsControler(tp) and c:IsType(TYPE_SYNCHRO)
 end
 function s.limop(e,tp,eg,ep,ev,re,r,rp)
 	if eg:IsExists(s.limfilter,1,nil,tp) then
