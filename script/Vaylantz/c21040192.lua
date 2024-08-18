@@ -33,7 +33,7 @@ function s.lcheck(g,lc,sumtype,tp)
 end
 
 function s.plfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
+	return c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
 end
 function s.pltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckPendulumZones(tp) and Duel.IsExistingMatchingCard(s.plfilter,tp,LOCATION_EXTRA,0,1,nil) end
