@@ -4,9 +4,10 @@ function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
 	aux.AddEquipProcedure(c,nil,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR))
     --multiattack
-	local e1=e1:Clone()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_EQUIP)
 	e1:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
-	e1:SetValue(function(e,c) return c:GetEquipCount()-1 end)
+	e1:SetValue(function(e,c) return e:GetHandler():GetEquipTarget():GetEquipCount()-1 end)
 	c:RegisterEffect(e1)
     --pierce
 	local e2=Effect.CreateEffect(c)
