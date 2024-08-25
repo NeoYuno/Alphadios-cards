@@ -55,6 +55,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 s.listed_series={0xaa}
+s.pendulum_level=4
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsNegatable() end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsNegatable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
