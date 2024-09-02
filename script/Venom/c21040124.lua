@@ -75,12 +75,16 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if ct>0 and #g>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		local sg=g:Select(tp,1,#g,nil)
-		local ac=sg:GetFirst()
-		if not ac then return end
-		for ac in aux.Next(sg) do
-			Duel.HintSelection(ac)
+		local tc=sg:GetFirst()
+		if not tc then return end
+		for tc in aux.Next(sg) do
+			local atk=tc:GetAttack()
+			Duel.HintSelection(tc)
 			local val=Duel.AnnounceLevel(tp,1,ct)
-			ac:AddCounter(0x1009,val)
+			tc:AddCounter(0x1009,1)
+			if atk>0 and tc:GetAttack()==0 then
+				Duel.RaiseEvent(tc,EVENT_CUSTOM+54306223,e,0,0,0,0)
+			end
 		end
 	end
 end

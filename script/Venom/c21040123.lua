@@ -47,7 +47,11 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local tc=Duel.SelectMatchingCard(tp,Card.IsCanAddCounter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,0x1009,1):GetFirst()
 	if tc then
+		local atk=tc:GetAttack()
         tc:AddCounter(0x1009,1)
+		if atk>0 and tc:GetAttack()==0 then
+			Duel.RaiseEvent(tc,EVENT_CUSTOM+54306223,e,0,0,0,0)
+		end
     end
 end
 

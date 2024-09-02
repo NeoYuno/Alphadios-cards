@@ -56,12 +56,19 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ct=Duel.GetMatchingGroup(Card.IsRace,tp,LOCATION_GRAVE,0,nil,RACE_REPTILE):GetClassCount(Card.GetCode)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	if ct>0 then
+	if ct>0 and #g>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-		local sg=g:Select(tp,1,ct,nil)
-		local ac=sg:GetFirst()
-		for ac in aux.Next(sg) do
-			ac:AddCounter(0x1009,1)
+		local sg=g:Select(tp,1,#g,nil)
+		local tc=sg:GetFirst()
+		if not tc then return end
+		for tc in aux.Next(sg) do
+			local atk=tc:GetAttack()
+			Duel.HintSelection(tc)
+			local val=Duel.AnnounceLevel(tp,1,ct)
+			tc:AddCounter(0x1009,val)
+			if atk>0 and tc:GetAttack()==0 then
+				Duel.RaiseEvent(tc,EVENT_CUSTOM+54306223,e,0,0,0,0)
+			end
 		end
 	end
 end
