@@ -45,28 +45,22 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
         local e1=Effect.CreateEffect(e:GetHandler())
-        e1:SetCategory(CATEGORY_DESTROY)
-        e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-        e1:SetCode(EVENT_BATTLE_START)
-        e1:SetRange(LOCATION_MZONE)
-        e1:SetCondition(s.descon)
-        e1:SetOperation(s.desop)
-        e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-        tc:RegisterEffect(e1)
+		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_BATTLE_START)
+		e1:SetOwnerPlayer(tp)
+		e1:SetCondition(s.descon)
+		e1:SetOperation(s.desop)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1,true)
 	end
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=c:GetBattleTarget()
-    e:SetLabelObject(tc)
-	return Duel.GetAttacker()==c and tc and tc:GetSummonType()==SUMMON_TYPE_SPECIAL
+	local tc=e:GetHandler():GetBattleTarget()
+	return tp==e:GetOwnerPlayer() and tc and tc:IsControler(1-tp) and tc:IsSummonType(SUMMON_TYPE_SPECIAL)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=e:GetLabelObject()
-	if c:IsFaceup() and c:IsRelateToEffect(e) and tc:IsRelateToBattle() then
-		Duel.Destroy(tc,REASON_EFFECT)
-	end
+	local tc=e:GetHandler():GetBattleTarget()
+	Duel.Destroy(tc,REASON_EFFECT)
 end
 
 function s.thfilter(c)
