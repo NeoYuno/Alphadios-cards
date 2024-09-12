@@ -50,7 +50,6 @@ function s.selfspop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
             local ct=Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_MZONE,0,nil,0x2c)
             local lv=Duel.AnnounceLevel(tp,1,ct)
-            Duel.BreakEffect()
             c:UpdateLevel(lv)
         end
     end

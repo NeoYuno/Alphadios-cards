@@ -26,16 +26,16 @@ s.listed_series={0x2c}
 s.listed_names={id,76103675}
 s.damfilter=aux.FaceupFilter(Card.IsCode,id,76103675)
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.damfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
 	local dam=Duel.GetMatchingGroupCount(s.damfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)*200
-	Duel.SetTargetParam(dam)
+	Duel.SetTargetParam(200+dam)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	local dam=Duel.GetMatchingGroupCount(s.damfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)*200
-	Duel.Damage(p,dam,REASON_EFFECT)
+	Duel.Damage(p,200+dam,REASON_EFFECT)
 end
 
 function s.confilter(c)
