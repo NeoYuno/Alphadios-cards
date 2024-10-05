@@ -81,7 +81,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=e:GetLabel()
     --Cannot Special Summon, except FIRE monsters
-	local e1=Effect.CreateEffect(c)
+	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
@@ -91,7 +91,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_PHASE|PHASE_END)
 	Duel.RegisterEffect(e1,tp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-    local sg=Duel.SelectMatchingCard(aux.NecroValleyFilter(tp,s.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,ct,ct,nil,e,tp)
+    local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,ct,ct,nil,e,tp)
     if #sg>0 then
         Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
     end
