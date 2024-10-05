@@ -34,14 +34,13 @@ function s.effcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SendtoHand(g,nil,REASON_COST)
-    e:GetHandler():RegisterFlagEffect(id,RESET_CHAIN,0,1)
 end
 function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
     local c=e:GetHandler()
     local g=c:GetMaterial()
-    local b1=Duel.IsPlayerCanDraw(tp,1) and g:IsExists(Card.IsRace,1,nil,RACE_SPELLCASTER)
-    local b2=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and g:IsExists(Card.IsRace,1,nil,RACE_WINGEDBEAST)
-    local b3=Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and g:IsExists(Card.IsRace,1,nil,RACE_THUNDER)
+    local b1=Duel.IsPlayerCanDraw(tp,1) and g:IsExists(Card.IsRace,1,nil,RACE_SPELLCASTER) and Duel.GetFlagEffect(tp,id)
+    local b2=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and g:IsExists(Card.IsRace,1,nil,RACE_WINGEDBEAST) and Duel.GetFlagEffect(tp,id+1)==0
+    local b3=Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and g:IsExists(Card.IsRace,1,nil,RACE_THUNDER) and Duel.GetFlagEffect(tp,id+2)==0
     if chk==0 then return b1 or b2 or b3 end
     local op=Duel.SelectEffect(tp,
 		{b1,aux.Stringid(id,0)},
@@ -70,7 +69,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
         if #g>0 then
             Duel.HintSelection(g)
             Duel.SendtoHand(g,nil,REASON_EFFECT)
-            Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+            Duel.RegisterFlagEffect(tp,id+1,RESET_PHASE+PHASE_END,0,1)
         end
     end
     if e:GetLabel()==3 then
@@ -79,7 +78,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
         if #g>0 then
             Duel.HintSelection(g)
             Duel.Destroy(g,REASON_EFFECT)
-            Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+            Duel.RegisterFlagEffect(tp,id+2,RESET_PHASE+PHASE_END,0,1)
         end
     end
 end
