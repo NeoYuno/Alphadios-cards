@@ -38,24 +38,18 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 s.listed_series={0xe6}
-function s.tgfilter(c,tp,bool)
-	local tg_check=nil
-	if bool then
-		tg_check=c:IsAbleToGrave()
-	else
-		tg_check=c:IsAbleToGraveAsCost()
-	end
-	return tg_check and Duel.GetMZoneCount(tp,c)>0 and c:IsSetCard(0xe6) and c:IsLevelAbove(5)
+function s.tgfilter(c,tp)
+	return Duel.GetMZoneCount(tp,c)>0 and c:IsSetCard(0xe6) and c:IsLevelAbove(5) and c:IsReleasable()
 end
 function s.spproccon(e,c)
 	if c==nil then return true end
 	local tp=e:GetHandlerPlayer()
-	local rg=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND|LOCATION_ONFIELD,0,c,tp,false)
+	local rg=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND|LOCATION_ONFIELD,0,c,tp)
 	return #rg>0 and aux.SelectUnselectGroup(rg,e,tp,1,1,nil,0)
 end
 function s.spproctg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local rg=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND|LOCATION_ONFIELD,0,c,tp,false)
-	local g=aux.SelectUnselectGroup(rg,e,tp,1,1,nil,1,tp,HINTMSG_TOGRAVE,nil,nil,true)
+	local rg=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND|LOCATION_ONFIELD,0,c,tp)
+	local g=aux.SelectUnselectGroup(rg,e,tp,1,1,nil,1,tp,HINTMSG_RELEASE,nil,nil,true)
 	if #g>0 then
 		g:KeepAlive()
 		e:SetLabelObject(g)
@@ -66,7 +60,7 @@ end
 function s.spprocop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	if not g then return end
-	Duel.SendtoGrave(g,REASON_COST)
+	Duel.Release(g,REASON_COST)
 	g:DeleteGroup()
 end
 
